@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Aniversário, Ellie! 🎉❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Montserrat:wght@300;400;600;700;900&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #cc0000;
+    --red-bright: #ff1a1a;
+    --red-dark: #880000;
+    --red-deep: #3d0000;
+    --red-glow: #ff4444;
+    --white: #fff5f5;
+    --cream: #ffe8e8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0000;
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ===== COUNTDOWN / WAIT SCREEN ===== */
+  #wait-screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    gap: 20px;
+  }
+
+  #wait-screen h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    color: var(--red-bright);
+    text-align: center;
+    padding: 0 20px;
+    text-shadow: 0 0 30px var(--red);
+  }
+
+  #wait-screen p {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    color: #ff8888;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  #countdown-timer {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .time-box {
+    background: var(--red-deep);
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 90px;
+    box-shadow: 0 0 20px var(--red-dark);
+  }
+
+  .time-box .num {
+    display: block;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--red-bright);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .time-box .lbl {
+    font-size: 0.7rem;
+    color: #ff8888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 6px;
+    display: block;
+  }
+
+  #wait-pulse {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1.5s ease-in-out infinite;
+    box-shadow: 0 0 40px var(--red-bright);
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+  }
+
+  /* ===== START SCREEN ===== */
+  #start-screen {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, #1a0000 0%, #000 70%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+    gap: 30px;
+    display: none;
+  }
+
+  #start-screen .title-pre {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: #ff8888;
+    opacity: 0;
+    animation: fadeIn 2s forwards 0.5s;
+  }
+
+  #start-screen .title-main {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 900;
+    color: var(--red-bright);
+    text-shadow: 0 0 60px var(--red), 0 0 120px var(--red-dark);
+    opacity: 0;
+    animation: fadeInScale 1.5s forwards 1s;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  #start-screen .subtitle {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1rem, 3vw, 1.8rem);
+    color: #ff9999;
+    opacity: 0;
+    animation: fadeIn 1.5s forwards 2s;
+    text-align: center;
+  }
+
+  #start-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 22px 70px;
+    font-size: 1.4rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    border-radius: 60px;
+    cursor: pointer;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeInScale 1s forwards 2.5s;
+    box-shadow: 0 0 40px var(--red), 0 0 80px var(--red-dark);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #start-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  #start-btn:hover::before { transform: translateX(100%); }
+  #start-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 60px var(--red-bright), 0 0 120px var(--red);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  #main-content {
+    display: none;
+    min-height: 100vh;
+  }
+
+  /* ===== CANVAS FOR PARTICLES ===== */
+  #canvas-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== BALLOONS ===== */
+  .balloon-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .balloon {
+    position: absolute;
+    bottom: -200px;
+    font-size: 50px;
+    animation: floatUp linear forwards;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px rgba(255,0,0,0.5));
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(-5deg); opacity: 0.9; }
+    50% { transform: translateY(-50vh) rotate(5deg); opacity: 0.9; }
+    100% { transform: translateY(-110vh) rotate(-3deg); opacity: 0; }
+  }
+
+  /* ===== HERO ===== */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 20px;
+    background: radial-gradient(ellipse at 50% 0%, #3d0000 0%, #0a0000 60%);
+    overflow: hidden;
+    z-index: 2;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,0,0,0.25) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: glowPulse 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; }
+    50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; }
+  }
+
+  .hero-from {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    color: #ff8888;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeIn 1s forwards 0.3s;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--red-bright);
+    text-shadow: 0 0 40px var(--red), 0 0 100px var(--red-dark), 0 0 200px #660000;
+    opacity: 0;
+    animation: fadeInScale 1.2s forwards 0.5s;
+    position: relative;
+  }
+
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 12vw, 10rem);
+    font-weight: 900;
+    font-style: italic;
+    color: var(--white);
+    text-shadow: 0 0 40px rgba(255,100,100,0.5);
+    opacity: 0;
+    animation: fadeInScale 1.2s forwards 0.8s;
+    line-height: 1;
+  }
+
+  .hero-emojis {
+    font-size: clamp(2rem, 5vw, 4rem);
+    margin: 20px 0;
+    opacity: 0;
+    animation: fadeIn 1s forwards 1.2s;
+    line-height: 1.5;
+  }
+
+  .hero-subtitle {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.2rem, 3vw, 2.2rem);
+    color: #ffaaaa;
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeIn 1s forwards 1.5s;
+  }
+
+  /* ===== BILLIE DECORATION ===== */
+  .billie-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(100,0,0,0.3);
+    border: 1px solid var(--red);
+    border-radius: 50px;
+    padding: 12px 28px;
+    margin: 30px 0;
+    font-size: 1rem;
+    color: #ffcccc;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    animation: fadeIn 1s forwards 2s;
+  }
+
+  .billie-icon { font-size: 1.5rem; }
+
+  /* ===== SCROLL INDICATOR ===== */
+  .scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #ff8888;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 1s forwards 3s;
+  }
+
+  .scroll-arrow {
+    width: 24px;
+    height: 24px;
+    border-right: 2px solid var(--red-bright);
+    border-bottom: 2px solid var(--red-bright);
+    transform: rotate(45deg);
+    animation: bounce 1.5s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); }
+    50% { transform: rotate(45deg) translateY(8px); }
+  }
+
+  /* ===== MESSAGE SECTION ===== */
+  #message-section {
+    position: relative;
+    z-index: 2;
+    padding: 80px 20px;
+    background: linear-gradient(180deg, #0a0000 0%, #150000 50%, #0a0000 100%);
+  }
+
+  .message-wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .message-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .message-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
+    color: var(--red-bright);
+    font-style: italic;
+    text-shadow: 0 0 30px var(--red-dark);
+  }
+
+  .divider {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+    margin: 20px auto;
+  }
+
+  .message-card {
+    background: linear-gradient(135deg, rgba(60,0,0,0.4), rgba(20,0,0,0.6));
+    border: 1px solid rgba(200,0,0,0.25);
+    border-radius: 20px;
+    padding: 50px 50px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 60px rgba(100,0,0,0.3), inset 0 1px 0 rgba(255,100,100,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .message-card::before {
+    content: '❤️';
+    position: absolute;
+    font-size: 200px;
+    opacity: 0.03;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .message-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red-bright), transparent);
+  }
+
+  .message-text {
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    line-height: 2;
+    color: var(--cream);
+    font-weight: 300;
+    white-space: pre-line;
+  }
+
+  .message-text .highlight {
+    color: var(--red-bright);
+    font-weight: 600;
+  }
+
+  .message-text .emoji-big {
+    font-size: 1.4em;
+  }
+
+  .message-signature {
+    margin-top: 40px;
+    text-align: right;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.6rem;
+    color: var(--red-bright);
+    text-shadow: 0 0 20px var(--red-dark);
+  }
+
+  /* ===== BILLIE SECTION ===== */
+  #billie-section {
+    position: relative;
+    z-index: 2;
+    padding: 60px 20px;
+    text-align: center;
+    background: radial-gradient(ellipse at center, #200000 0%, #0a0000 70%);
+  }
+
+  .billie-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    color: var(--red-bright);
+    margin-bottom: 30px;
+    text-shadow: 0 0 30px var(--red-dark);
+  }
+
+  .vinyl-record {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #1a0000 30%, #330000 40%, #1a0000 45%, #330000 55%, #1a0000 60%, #cc0000 62%, #1a0000 65%);
+    margin: 0 auto 20px;
+    animation: spin 4s linear infinite;
+    box-shadow: 0 0 40px var(--red-dark), 0 0 80px rgba(100,0,0,0.3);
+    position: relative;
+  }
+
+  .vinyl-record::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #ff4444 0%, #aa0000 100%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    box-shadow: 0 0 15px var(--red-bright);
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .song-info {
+    font-family: 'Montserrat', sans-serif;
+    color: #ffaaaa;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .song-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-style: italic;
+    color: var(--red-bright);
+    text-shadow: 0 0 20px var(--red);
+  }
+
+  /* ===== AUDIO BAR ===== */
+  #audio-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.9);
+    border-top: 1px solid var(--red-dark);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    backdrop-filter: blur(20px);
+    display: none;
+  }
+
+  #audio-bar .song-detail {
+    flex: 1;
+  }
+
+  #audio-bar .song-name {
+    font-size: 0.85rem;
+    color: var(--red-bright);
+    font-weight: 600;
+  }
+
+  #audio-bar .artist-name {
+    font-size: 0.75rem;
+    color: #ff8888;
+  }
+
+  #play-pause-btn {
+    background: var(--red);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px var(--red-dark);
+    flex-shrink: 0;
+  }
+
+  #play-pause-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px var(--red); }
+
+  .audio-progress {
+    flex: 3;
+    height: 4px;
+    background: rgba(200,0,0,0.2);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .audio-progress-bar {
+    height: 100%;
+    background: var(--red-bright);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s linear;
+    box-shadow: 0 0 8px var(--red);
+  }
+
+  .audio-time {
+    font-size: 0.75rem;
+    color: #ff8888;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eq-bars {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .eq-bar {
+    width: 4px;
+    background: var(--red-bright);
+    border-radius: 2px;
+    animation: eq linear infinite;
+    box-shadow: 0 0 4px var(--red);
+  }
+
+  .eq-bar:nth-child(1) { animation-duration: 0.6s; height: 40%; }
+  .eq-bar:nth-child(2) { animation-duration: 0.9s; height: 80%; }
+  .eq-bar:nth-child(3) { animation-duration: 0.5s; height: 60%; }
+  .eq-bar:nth-child(4) { animation-duration: 0.7s; height: 90%; }
+  .eq-bar:nth-child(5) { animation-duration: 0.8s; height: 50%; }
+
+  @keyframes eq {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+  }
+
+  /* ===== FOOTER ===== */
+  #footer {
+    position: relative;
+    z-index: 2;
+    padding: 60px 20px 120px;
+    text-align: center;
+    background: linear-gradient(180deg, #0a0000 0%, #000 100%);
+  }
+
+  .footer-heart {
+    font-size: 5rem;
+    animation: heartBeat 1.2s ease-in-out infinite;
+    display: inline-block;
+    filter: drop-shadow(0 0 20px var(--red));
+  }
+
+  @keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.15); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.1); }
+    70% { transform: scale(1); }
+  }
+
+  .footer-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.3rem, 4vw, 2.5rem);
+    color: var(--red-bright);
+    margin: 20px 0 10px;
+    text-shadow: 0 0 20px var(--red-dark);
+  }
+
+  .footer-sub {
+    font-size: 0.85rem;
+    color: #888;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* ===== CONFETTI ===== */
+  .confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 200;
+    animation: confettiFall linear forwards;
+    border-radius: 2px;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ===== RESPONSIVENESS ===== */
+  @media (max-width: 600px) {
+    .message-card { padding: 30px 24px; }
+    .time-box .num { font-size: 2.2rem; }
+    .time-box { min-width: 70px; padding: 12px 16px; }
+  }
+
+  /* ===== GLITCH TEXT EFFECT ===== */
+  .glitch {
+    position: relative;
+  }
+
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    overflow: hidden;
+  }
+
+  .glitch::before {
+    color: #ff0044;
+    animation: glitch1 3s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  }
+
+  .glitch::after {
+    color: #ff4444;
+    animation: glitch2 3s infinite;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  }
+
+  @keyframes glitch1 {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(-3px, 1px); }
+    94% { transform: translate(3px, -1px); }
+    96% { transform: translate(-2px, 0); }
+  }
+
+  @keyframes glitch2 {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(3px, 1px); }
+    94% { transform: translate(-3px, -1px); }
+    96% { transform: translate(2px, 0); }
+  }
+
+  /* Stars bg */
+  .star {
+    position: fixed;
+    background: rgba(255,150,150,0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: twinkle ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- WAIT SCREEN -->
+<div id="wait-screen">
+  <div id="wait-pulse"></div>
+  <h1>🔒 Conteúdo Bloqueado!</h1>
+  <p>Este presente abre apenas na meia-noite do dia <strong style="color:var(--red-bright)">3 de março de 2026</strong> 🎂</p>
+  <p style="font-size:0.9rem; color:#888; margin-top:-10px;">Não adianta mudar a data do celular... 😏</p>
+  <div id="countdown-timer">
+    <div class="time-box"><span class="num" id="cd-days">00</span><span class="lbl">Dias</span></div>
+    <div class="time-box"><span class="num" id="cd-hours">00</span><span class="lbl">Horas</span></div>
+    <div class="time-box"><span class="num" id="cd-min">00</span><span class="lbl">Minutos</span></div>
+    <div class="time-box"><span class="num" id="cd-sec">00</span><span class="lbl">Segundos</span></div>
+  </div>
+  <p style="font-size:0.8rem; color:#555; margin-top:10px;">❤️ Com carinho, Carluz</p>
+</div>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <div class="title-pre">Uma surpresa especial para...</div>
+  <div class="hero-title title-main glitch" data-text="ELLIE DIELY">ELLIE DIELY</div>
+  <div class="subtitle">Do seu amigo Carluz, o Lobinho 🐺❤️</div>
+  <button id="start-btn" onclick="startExperience()">✨ COMEÇAR ✨</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+  <!-- PARTICLES CANVAS -->
+  <canvas id="canvas-bg"></canvas>
+
+  <!-- STARS -->
+  <div id="stars-container"></div>
+
+  <!-- BALLOONS -->
+  <div class="balloon-container" id="balloon-container"></div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-from">✨ Feliz Aniversário ✨</div>
+    <div class="hero-title glitch" data-text="ELLIE">ELLIE</div>
+    <div class="hero-name">Diely</div>
+    <div class="hero-emojis">😍❤️🎂🎉❤️😍</div>
+    <div class="billie-badge">
+      <span class="billie-icon">🎵</span>
+      <span>Tema: Billie Eilish</span>
+      <span class="billie-icon">🎵</span>
+    </div>
+    <div class="hero-subtitle">De Carluz - O Lobinho 🐺</div>
+    <div class="scroll-hint">
+      <span>Role para baixo</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- BILLIE SECTION -->
+  <section id="billie-section">
+    <h2 class="billie-title">🎵 Getting Older - Billie Eilish 🎵</h2>
+    <div class="vinyl-record"></div>
+    <div class="song-info">Tocando agora</div>
+    <div class="song-title">Getting Older</div>
+    <p style="color:#ff8888; margin-top:10px; font-size:0.9rem;">— Billie Eilish (pra sua fã favorita 💕)</p>
+  </section>
+
+  <!-- MESSAGE SECTION -->
+  <section id="message-section">
+    <div class="message-wrapper">
+      <div class="message-header">
+        <h2>💌 Uma mensagem especial</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="message-card">
+        <div class="message-text">
+<span class="emoji-big">😍❤️😍😍❤️❤️</span>
+
+<span class="highlight">OIEE ELLIE DIELY LINDA!</span> TUDO BEM?! <span class="highlight">FELIZ ANIVERSÁRIO</span> 🎂🎂🎉🎂🎂🎉🎉
+
+Espero que você esteja muito bem e feliz quando for ler isso aqui 😍❤️ Meu Deus, você ficando mais velha ainda que já é — <span class="highlight">15 anos!!!!</span> Ou é 16... Não lembro 😍❤️
+
+Enfim, não sou tão bom com textinhos, mas vamos lá...
+
+É o <span class="highlight">segundo aniversário seu que eu pego!</span> 🥵 Amo estar presente nesses 2 aniversários seus, afinal, 2 anos de amizade, né? 😜 Eu sei que nesses últimos tempos ocorreram alguns desentendimentos, umas brigas, confusões que nos afastaram muito ou um pouco... Pesou o clima... Mas do mesmo jeito eu reconheço que a maioria dos acontecimentos foi por minha culpa, tanto por brincadeiras de mal gosto quanto por algumas falas minhas que são idiotas e sem sentido ❤️‍🩹 Me desculpa por eu ser um <em>"Manchild"</em> na maioria do tempo!
+
+Sei que agora você não faz mais parte, mas a comunidade <span class="highlight">Billie Global BR</span>, projeto criado por nós, cresceu muito bem com você! Obrigado por todo esse apoio desde o início de tudo, desde a idealização disso e, por fim, a realização que deu muito certo! Sinta-se orgulhosa de ter feito uma das <span class="highlight">maiores comunidades de fãs de uma cantora pop!</span> INCRÍVEL!!!!
+
+Sua amizade é sim verdadeira e sincera. Quando estamos errados você fala, quando estamos certos você fala, você grita, você briga, você faz tudo! Porque essa é você e não vai mudar — <span class="highlight">essa é a sua essência!</span> E desde o grupo lááááá atrás na BUBR eu sabia que você era assim! Você é muito forte e incrível!
+
+Obrigado por tudo que fez até agora comigo e com nossos amigos próximos! <span class="highlight">Você é importante e você brilha!</span> Eu tenho certeza que JAMAIS irei esquecer da sua amizade! Obrigado por tudo, fofa! ❤️😜😜❤️‍🩹🎉
+
+<span class="emoji-big">🎉🎉🎉🎂🎂🎂❤️❤️❤️❤️‍🩹❤️‍🩹❤️‍🩹❤️‍🩹❤️‍🩹❤️‍🩹❤️❤️🎉</span>
+
+<span class="highlight" style="font-size:1.3em;">FELIZ ANIVERSÁRIO ELLIE!!!</span>
+        </div>
+        <div class="message-signature">
+          Com carinho,<br>
+          Carluz — O Lobinho 🐺
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <section id="footer">
+    <div class="footer-heart">❤️</div>
+    <div class="footer-text">Feliz Aniversário, Ellie Diely!</div>
+    <div class="footer-sub">Feito com muito carinho por Carluz • 2026</div>
+    <br>
+    <div style="margin-top:30px; font-size:2rem; letter-spacing:8px;">🎂 🎉 ❤️ 🎊 🎈</div>
+  </section>
+
+</div>
+
+<!-- AUDIO BAR -->
+<div id="audio-bar">
+  <div class="eq-bars">
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+  </div>
+  <div class="song-detail">
+    <div class="song-name">Getting Older</div>
+    <div class="artist-name">Billie Eilish</div>
+  </div>
+  <button id="play-pause-btn" onclick="togglePlay()">⏸</button>
+  <div class="audio-progress" onclick="seekAudio(event)">
+    <div class="audio-progress-bar" id="progress-bar"></div>
+  </div>
+  <span class="audio-time" id="audio-time-display">0:00 / 0:00</span>
+</div>
+
+<!-- AUDIO ELEMENT -->
+<audio id="bg-audio" loop>
+  <source src="https://github.com/billieglobalbr-collab/Music/raw/dcb556ee2cfd72ebe44b93406938f6b1149f2c18/SpotiDown.App%20-%20Getting%20Older%20-%20Billie%20Eilish.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// ========================================
+// DATE CHECK — uses UTC, immune to local clock manipulation
+// ========================================
+const TARGET_DATE = { year: 2026, month: 3, day: 3 }; // March 3, 2026
+
+async function getServerTime() {
+  try {
+    const res = await fetch('https://worldtimeapi.org/api/timezone/America/Sao_Paulo', { cache: 'no-cache' });
+    const data = await res.json();
+    return new Date(data.datetime);
+  } catch {
+    // Fallback 1: try another server
+    try {
+      const res2 = await fetch('https://timeapi.io/api/time/current/zone?timeZone=America/Sao_Paulo', { cache: 'no-cache' });
+      const data2 = await res2.json();
+      return new Date(`${data2.date}T${data2.time}`);
+    } catch {
+      // Fallback 2: use local time (last resort)
+      return new Date();
+    }
+  }
+}
+
+async function checkDate() {
+  const now = await getServerTime();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const hour = now.getHours();
+  const min = now.getMinutes();
+
+  const isAfterTarget = (year > TARGET_DATE.year) ||
+    (year === TARGET_DATE.year && month > TARGET_DATE.month) ||
+    (year === TARGET_DATE.year && month === TARGET_DATE.month && day > TARGET_DATE.day) ||
+    (year === TARGET_DATE.year && month === TARGET_DATE.month && day === TARGET_DATE.day && (hour > 0 || (hour === 0 && min >= 0)));
+
+  if (isAfterTarget) {
+    showStartScreen();
+  } else {
+    showWaitScreen(now);
+  }
+}
+
+function showWaitScreen(now) {
+  document.getElementById('wait-screen').style.display = 'flex';
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'none';
+
+  const target = new Date('2026-03-03T00:00:00-03:00'); // Brasília midnight
+
+  function updateCountdown() {
+    const diff = target - Date.now(); // approximate, server-synced at load
+    if (diff <= 0) {
+      location.reload();
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+
+    document.getElementById('cd-days').textContent = String(days).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-min').textContent = String(mins).padStart(2,'0');
+    document.getElementById('cd-sec').textContent = String(secs).padStart(2,'0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
+
+function showStartScreen() {
+  document.getElementById('wait-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'flex';
+}
+
+// Run on load
+checkDate();
+
+// ========================================
+// START EXPERIENCE
+// ========================================
+function startExperience() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  document.getElementById('audio-bar').style.display = 'flex';
+
+  initStars();
+  initCanvas();
+  startBalloons();
+  startConfetti();
+  playAudio();
+}
+
+// ========================================
+// AUDIO
+// ========================================
+const audio = document.getElementById('bg-audio');
+const progressBar = document.getElementById('progress-bar');
+const timeDisplay = document.getElementById('audio-time-display');
+const playPauseBtn = document.getElementById('play-pause-btn');
+
+function playAudio() {
+  audio.volume = 0.7;
+  audio.play().catch(() => {
+    // If autoplay fails, show play button
+    playPauseBtn.textContent = '▶';
+  });
+}
+
+function togglePlay() {
+  if (audio.paused) {
+    audio.play();
+    playPauseBtn.textContent = '⏸';
+  } else {
+    audio.pause();
+    playPauseBtn.textContent = '▶';
+  }
+}
+
+function seekAudio(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const ratio = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = ratio * audio.duration;
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${String(sec).padStart(2,'0')}`;
+}
+
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  progressBar.style.width = pct + '%';
+  timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+  playPauseBtn.textContent = audio.paused ? '▶' : '⏸';
+});
+
+// ========================================
+// STARS
+// ========================================
+function initStars() {
+  const container = document.getElementById('stars-container');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 3 + 1;
+    star.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}vh; left:${Math.random()*100}vw;
+      animation-duration:${Math.random()*3+2}s;
+      animation-delay:${Math.random()*3}s;
+    `;
+    container.appendChild(star);
+  }
+}
+
+// ========================================
+// CANVAS PARTICLES
+// ========================================
+function initCanvas() {
+  const canvas = document.getElementById('canvas-bg');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  const particles = [];
+  for (let i = 0; i < 50; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 2 + 1,
+      alpha: Math.random() * 0.5 + 0.1,
+      color: `hsl(${Math.floor(Math.random()*40)}, 100%, 50%)`
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ========================================
+// BALLOONS
+// ========================================
+const balloonEmojis = ['🎈', '🎈', '🎈', '❤️', '🎉', '🎊', '🎈', '🔴'];
+function spawnBalloon() {
+  const container = document.getElementById('balloon-container');
+  const el = document.createElement('div');
+  el.className = 'balloon';
+  el.textContent = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+  el.style.left = Math.random() * 100 + 'vw';
+  el.style.fontSize = (Math.random() * 30 + 30) + 'px';
+  const duration = Math.random() * 6 + 6;
+  el.style.animationDuration = duration + 's';
+  el.style.animationDelay = '0s';
+  container.appendChild(el);
+  setTimeout(() => el.remove(), duration * 1000);
+}
+
+function startBalloons() {
+  for (let i = 0; i < 8; i++) {
+    setTimeout(spawnBalloon, i * 400);
+  }
+  setInterval(spawnBalloon, 1200);
+}
+
+// ========================================
+// CONFETTI
+// ========================================
+const confettiColors = ['#cc0000','#ff4444','#ff0000','#ff6666','#880000','#ffaaaa','#ffffff','#ff2222'];
+
+function spawnConfetti() {
+  const el = document.createElement('div');
+  el.className = 'confetti-piece';
+  el.style.left = Math.random() * 100 + 'vw';
+  el.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+  el.style.width = (Math.random() * 10 + 6) + 'px';
+  el.style.height = (Math.random() * 6 + 4) + 'px';
+  el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+  const duration = Math.random() * 3 + 3;
+  el.style.animationDuration = duration + 's';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), duration * 1000);
+}
+
+function startConfetti() {
+  for (let i = 0; i < 40; i++) {
+    setTimeout(spawnConfetti, i * 80);
+  }
+  setInterval(spawnConfetti, 300);
+}
+
+// ========================================
+// SOUNDS — Web Audio API
+// ========================================
+let audioCtx;
+
+function playPopSound() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.15);
+  gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+  osc.start(audioCtx.currentTime);
+  osc.stop(audioCtx.currentTime + 0.15);
+}
+
+// Subtle UI sound on scroll milestone
+let lastSoundSection = 0;
+window.addEventListener('scroll', () => {
+  const sections = Math.floor(window.scrollY / window.innerHeight);
+  if (sections !== lastSoundSection) {
+    lastSoundSection = sections;
+    playPopSound();
+  }
+});
+</script>
+</body>
+</html>
